@@ -13,15 +13,17 @@ const passwordInput = ref('')
 const secretInput = ref('')
 const statusMessage = ref('')
 
+const tempToken = ref('')
+
 const handleLogin = async () => {
   try {
-    const response = await api.post('/auth/login', {
+    const response = await api.post('/api/login/step1/', {
       username: loginInput.value,
       password: passwordInput.value
     })
 
-    if (response.data && response.data.token) {
-      auth.setToken(response.data.token)
+    if (response.data && response.data.temp_login_token) {
+      tempToken.value = response.data.temp_login_token
       step.value = 2 
       statusMessage.value = ''
     }
@@ -32,27 +34,32 @@ const handleLogin = async () => {
 
 const handleSecret = async () => {
   try {
-    const response = await api.post('/auth/verify', {
-      userId: auth.user.user_id, 
-      code: secretInput.value
+    const response = await api.post('/api/login/step2/', {
+      temp_login_token: tempToken.value, 
+      daily_code: secretInput.value
     })
 
-    if (response.status === 200) {
-      auth.setVerified()
+    if (response.status === 200 && response.data?.access) {
+      auth.setToken(response.data.access, response.data.refresh) 
+      auth.setVerified(true)
+      
+      
       const mapUrl = import.meta.env.VITE_MAP_SERVICE_URL
+      
       if (mapUrl) {
         window.location.href = mapUrl
       } else {
         router.push('/')
       }
-    }
+    } 
   } catch (err) {
     statusMessage.value = 'Error: Invalid secret code'
   }
-}
+} 
 
 const logout = () => {
   auth.clearAuth()
+  tempToken.value = ''
   step.value = 1
   loginInput.value = ''
   passwordInput.value = ''
