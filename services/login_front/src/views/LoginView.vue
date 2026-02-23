@@ -15,14 +15,14 @@ const statusMessage = ref('')
 
 const handleLogin = async () => {
   try {
-    const response = await api.post('/auth/login', {
+    const response = await api.post('/api/login/step1/', {
       username: loginInput.value,
       password: passwordInput.value
     })
 
-    if (response.data && response.data.token) {
-      auth.setToken(response.data.token)
-      step.value = 2 
+    if (response.data && response.data.temp_login_token) {
+      auth.setToken(response.data.temp_login_token)
+      step.value = 2
       statusMessage.value = ''
     }
   } catch (err) {
@@ -32,9 +32,10 @@ const handleLogin = async () => {
 
 const handleSecret = async () => {
   try {
-    const response = await api.post('/auth/verify', {
-      userId: auth.user.user_id, 
-      code: secretInput.value
+    const response = await api.post('/api/login/step2/', {
+      temp_login_token: auth.token,
+      daily_code: secretInput.value
+
     })
 
     if (response.status === 200) {
@@ -118,7 +119,7 @@ button {
 
 .button-group {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   gap: 10px;
 }
 

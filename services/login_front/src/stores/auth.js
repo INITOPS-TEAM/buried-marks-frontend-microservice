@@ -7,12 +7,12 @@ export const useAuthStore = defineStore('auth', {
     user: null,
     isLoggedIn: false
   }),
-  
+
   actions: {
     setToken(token) {
       try {
         this.token = token
-        this.user = jwtDecode(token)
+        // this.user = jwtDecode(token)
         this.isLoggedIn = true
       } catch (error) {
         console.error("JWT Decode Error:", error)
@@ -28,7 +28,7 @@ export const useAuthStore = defineStore('auth', {
       this.token = null
       this.user = null
       this.isLoggedIn = false
-            
+
       const loginUrl = import.meta.env.VITE_LOGIN_SERVICE_URL
       if (loginUrl && window.location.port !== '5100') {
         window.location.href = loginUrl
