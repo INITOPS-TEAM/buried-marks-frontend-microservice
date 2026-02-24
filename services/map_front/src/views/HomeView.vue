@@ -62,7 +62,7 @@ const goTo = (lng, lat, zoom = 14) => {
 const deleteMarker = async (id) => {
   if (!confirm('CONFIRM DELETION?')) return
   try {
-    await api.delete(`/markers/${id}`)
+    await api.delete(`api/markers/${id}/`)
     markersList.value = markersList.value.filter(m => m.id !== id)
     mapboxMarkers.get(id)?.remove()
     mapboxMarkers.delete(id)
@@ -74,7 +74,7 @@ const deleteMarker = async (id) => {
 const saveMarker = async () => {
   if (!newMarkerData.value.label) return
   try {
-    const { data } = await api.post('/markers', {
+    const { data } = await api.post('api/markers/', {
       ...newMarkerData.value,
       ...tempCoords.value,
       author_id: currentUser.value?.user_id
@@ -119,7 +119,7 @@ onMounted(async () => {
   mapInstance.on('click', () => showForm.value = false)
 
   try {
-    const { data } = await api.get('/markers')
+    const { data } = await api.get('api/markers/')
     markersList.value = data
     data.forEach(addMarkerToMap)
   } catch (err) {
@@ -200,7 +200,7 @@ onUnmounted(() => {
 .content { flex: 1; display: flex; overflow: hidden; }
 .hud { background: var(--bg-panel); border-bottom: 1px solid var(--accent); padding: 0 25px; min-height: 80px; display: flex; align-items: center; backdrop-filter: blur(5px); }
 .hud-content { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-.nav-right { display: flex; gap: 15px; } 
+.nav-right { display: flex; gap: 15px; }
 .main-title { color: var(--accent); font-size: 1.3rem; margin: 0; letter-spacing: 2px; }
 .agent-info { font-size: 0.8rem; display: flex; gap: 15px; align-items: center; color: #aaa; margin-top: 5px; }
 .stars { color: var(--stars); letter-spacing: 2px; }

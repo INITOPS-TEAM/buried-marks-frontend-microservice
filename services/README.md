@@ -37,7 +37,7 @@ All frontend services are located in the `services/` directory:
 
 ```bash
 cd services/login_front
-npm install
+npm сі
 ```
 
 3.**Development**:
