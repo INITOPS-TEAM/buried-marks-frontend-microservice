@@ -30,7 +30,7 @@ body {
   cursor: pointer;
   transition: 0.2s all ease;
   border-radius: 2px;
-  
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -43,30 +43,50 @@ body {
   border: 1px solid transparent;
 }
 
-.btn-primary { 
-  background: var(--accent); 
-  color: #fff; 
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
 }
 
-.btn-primary:hover { 
-  background: var(--accent-hover); 
+.btn-primary:hover {
+  background: var(--accent-hover);
   box-shadow: 0 0 15px rgba(20, 70, 209, 0.4);
   border-color: var(--scout);
 }
 
-.btn-secondary { 
-  background: rgba(26, 26, 26, 0.9); 
-  border: 1px solid #444; 
-  color: var(--text-dim); 
+.btn-secondary {
+  background: rgba(26, 26, 26, 0.9);
+  border: 1px solid #444;
+  color: var(--text-dim);
 }
 
-.btn-secondary:hover { 
-  background: var(--accent-hover2); 
-  color: #fff; 
+.btn-secondary:hover {
+  background: var(--accent-hover2);
+  color: #fff;
   border-color: var(--text-main);
 }
 .nav-right {
   display: flex;
-  gap: 15px; 
+  gap: 15px;
   align-items: center;
+}
+
+.mapboxgl-popup-content {
+  background: var(--bg-box) !important;
+  color: var(--text-main) !important;
+  font-family: var(--font-mono) !important;
+  border: 1px solid var(--accent-hover2) !important;
+  border-radius: 2 px !important;
+  padding: 12 px !important;
+}
+.mapboxgl-popup-tip {
+  display: none !important;
+}
+.mapboxgl-popup-close-button {
+  color: var(--test-dim) !important;
+  font-size: 1rem !important;
+}
+.mapboxgl-popup-close-button:hover {
+  color: #fff !important;
+  background: none !important;
 }
