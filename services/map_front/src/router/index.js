@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from "../stores/auth"
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory('/map/'),
     routes: [
         {
             path: '/',
@@ -20,7 +20,7 @@ router.beforeEach((to, from, next) => {
         return
     }
 
-    next() 
+    next()
 })
 
 export default router
