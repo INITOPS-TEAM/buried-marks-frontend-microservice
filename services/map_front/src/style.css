@@ -90,3 +90,20 @@ body {
   color: #fff !important;
   background: none !important;
 }
+
+.file-label {
+  display: block;
+  border: 1px solid var(--accent-hover2);
+  color: var(--text-dim);
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  margin-bottom: 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.file-label:hover {
+  border-color: var(--accent);
+  color: #fff;
+}

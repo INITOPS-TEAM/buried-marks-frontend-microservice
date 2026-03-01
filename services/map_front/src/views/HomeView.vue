@@ -14,6 +14,11 @@ const showForm = ref(false)
 const formPos = ref({ x: 0, y: 0 })
 const tempCoords = ref({ lng: 0, lat: 0 })
 const newMarkerData = ref({ label: '', category: 'scout' })
+const selectedImage = ref(null)
+
+const onImageSelect = (e) => {
+  selectedImage.value = e.target.files[0]
+}
 
 let mapInstance = null
 const mapboxMarkers = markRaw(new Map())
@@ -93,6 +98,12 @@ window.confirmMarker = (id) => {
     toggleConfirm(marker).then(() => {
       const countEl = document.getElementById(`confirm-count-${id}`)
       if (countEl) countEl.textContent = marker.confirm_count
+
+      const btn = document.getElementById(`confirm-btn-${id}`)
+      if (btn) {
+        btn.style.borderColor = marker.confirmed_by_me ? 'var(--accent)' : '#fff'
+        btn.style.color = marker.confirmed_by_me ? 'var(--accent)' : '#fff'
+      }
     })
   }
 }
@@ -109,10 +120,21 @@ const saveMarker = async () => {
       ...tempCoords.value,
       author_id: currentUser.value?.user_id
     })
+
+    if (selectedImage.value) {
+      const formData = new FormData()
+      formData.append('image', selectedImage.value)
+      const ImageResponse = await api.post(`api/markers/${data.id}/image/`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      data.image = ImageResponse.data.image_url
+    }
+
     markersList.value.push(data)
     addMarkerToMap(data)
     showForm.value = false
     newMarkerData.value.label = ''
+    selectedImage.value = null
   } catch (err) {
     console.error('Save failed', err)
   }
@@ -126,10 +148,13 @@ const addMarkerToMap = (m) => {
     <div class="popup-content">
       <div class="popup-title" style="color: ${m.category === 'danger' ? 'var(--danger)' : m.category === 'scout' ? 'var(--scout)' : 'var(--base)'}; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-size: 0.85 rem; ">
         ${m.label}
+        ${m.image ? `<img src="${m.image}" style="width:100%; height:120px; object-fit:contain; margin-bottom:8px;" />` : ''}
       </div>
       <div class="popup-actions" style="display: flex; gap: 6px;">
         <button class="btn-secondary"
           onclick="window.confirmMarker(${m.id})"
+          id="confirm-btn-${m.id}"
+          style="${m.confirmed_by_me ? 'border-color: var(--accent);' : 'border-color: #fff;' }"
           ${m.author_id === currentUser.value?.user_id ? 'disabled' : ''}>
         ✓ <span id="confirm-count-${m.id}">${m.confirm_count}</span>
         </button>
@@ -238,6 +263,10 @@ onUnmounted(() => {
             <option value="danger">DANGER</option>
             <option value="base">BASE</option>
           </select>
+          <label class="file-label">
+            <input type="file" accept="image/*" @change="onImageSelect" style="display:none"/>
+            {{ selectedImage  ? selectedImage.name : 'ATTACH PHOTO'}}
+          </label>
           <div class="form-btns">
             <button class="btn-primary" @click="saveMarker">DEPLOY</button>
             <button class="btn-secondary" @click="showForm = false">×</button>
