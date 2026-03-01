@@ -71,6 +71,36 @@ const deleteMarker = async (id) => {
   }
 }
 
+const toggleConfirm = async (marker) => {
+  try{
+    if (marker.confirmed_by_me){
+      await api.delete(`api/markers/${marker.id}/confirm/`)
+      marker.confirm_count--
+      marker.confirmed_by_me = false
+    } else {
+      await api.post(`api/markers/${marker.id}/confirm/`)
+      marker.confirm_count++
+      marker.confirmed_by_me = true
+    }
+  } catch (err) {
+      console.error('Confirm failed', err)
+  }
+}
+
+window.confirmMarker = (id) => {
+  const marker = markersList.value.find(m => m.id === id)
+  if (marker) {
+    toggleConfirm(marker).then(() => {
+      const countEl = document.getElementById(`confirm-count-${id}`)
+      if (countEl) countEl.textContent = marker.confirm_count
+    })
+  }
+}
+
+window.deleteMarkerById = async (id) => {
+  await deleteMarker(id)
+}
+
 const saveMarker = async () => {
   if (!newMarkerData.value.label) return
   try {
@@ -91,9 +121,26 @@ const saveMarker = async () => {
 const addMarkerToMap = (m) => {
   const el = document.createElement('div')
   el.className = `marker ${m.category}`
+
+  const popupHTML = `
+    <div class="popup-content">
+      <div class="popup-title" style="color: ${m.category === 'danger' ? 'var(--danger)' : m.category === 'scout' ? 'var(--scout)' : 'var(--base)'}; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-size: 0.85 rem; ">
+        ${m.label}
+      </div>
+      <div class="popup-actions" style="display: flex; gap: 6px;">
+        <button class="btn-secondary"
+          onclick="window.confirmMarker(${m.id})"
+          ${m.author_id === currentUser.value?.user_id ? 'disabled' : ''}>
+        ✓ <span id="confirm-count-${m.id}">${m.confirm_count}</span>
+        </button>
+        ${permissions.value.canDelete ? `<button onclick="window.deleteMarkerById(${m.id})">×</button>` : ''}
+        </div>
+      </div>
+  `
+
   const marker = new mapboxgl.Marker(el)
     .setLngLat([m.lng, m.lat])
-    .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<b>${m.label}</b>`))
+    .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML))
     .addTo(mapInstance)
   mapboxMarkers.set(m.id, marker)
 }
@@ -166,6 +213,14 @@ onUnmounted(() => {
                 <span class="dot" :class="m.category"></span>
                 <span>{{ m.label }}</span>
               </div>
+              <button
+                class="confirm-btn"
+                :class="[{ confirmed: m.confirmed_by_me }, m.category]"
+                :disabled="m.author_id === currentUser.user_id"
+                @click.stop="toggleConfirm(m)"
+                >
+                ✓ {{ m.confirm_count }}
+              </button>
               <button v-if="permissions.canDelete" class="delete-icon" @click.stop="deleteMarker(m.id)">×</button>
             </div>
           </div>
@@ -209,6 +264,7 @@ onUnmounted(() => {
 .sidebar { width: 280px; border-right: 1px solid var(--accent-hover2); background: var(--bg-panel); overflow-y: auto; }
 .group-header { padding: 12px 15px; background: rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: space-between; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .item { padding: 8px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.02); }
+.item-actions { display: flex; gap: 8px; align-items: center;}
 .item:hover { background: rgba(23, 27, 107, 0.2); }
 .item-info { display: flex; align-items: center; gap: 10px; flex: 1; }
 .map-area { flex: 1; position: relative; }
@@ -219,6 +275,12 @@ onUnmounted(() => {
 .form-btns { display: flex; gap: 8px; }
 .form-btns button { flex: 1; height: 32px; font-size: 0.7rem; }
 .center-btn { position: absolute; top: 20px; right: 20px; background: var(--bg-box); border: 1px solid var(--accent); color: var(--scout); width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.confirm-btn { background: none; border: 1px solid var (--accent-hover2); color: var(--test-dim); cursor: pointer; font-family: var(--font-mono); font-size: 0.75rem; padding: 2px 8px; transition: 0.2s; }
+.confirm-btn.confirmed.danger { border-color: var(--danger); color: var(--danger);}
+.confirm-btn.confirmed.scout { border-color: var(--scout); color: var(--scout);}
+.confirm-btn.confirmed.base { border-color: var(--base); color: var(--base);}
+.confirm-btn:hover:not(:disabled) { border-color: var(--text-dim); color: var(--text-dim);}
+.confirm-btn:disabled { opacity: 0.3; cursor: not-allowed;}
 .delete-icon { background: none; border: none; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
 .delete-icon:hover { color: var(--danger); }
 .voting-glow { box-shadow: 0 0 10px rgba(66, 133, 244, 0.4); border-color: #4285f4; }
