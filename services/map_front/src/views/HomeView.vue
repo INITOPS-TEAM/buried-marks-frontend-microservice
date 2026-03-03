@@ -13,7 +13,7 @@ const activeGroups = ref({ danger: true, scout: true, base: true })
 const showForm = ref(false)
 const formPos = ref({ x: 0, y: 0 })
 const tempCoords = ref({ lng: 0, lat: 0 })
-const newMarkerData = ref({ label: '', category: 'scout' })
+const newMarkerData = ref({ label: '', category: 'scout', description: ''})
 const selectedImage = ref(null)
 
 const onImageSelect = (e) => {
@@ -148,8 +148,9 @@ const addMarkerToMap = (m) => {
     <div class="popup-content">
       <div class="popup-title" style="color: ${m.category === 'danger' ? 'var(--danger)' : m.category === 'scout' ? 'var(--scout)' : 'var(--base)'}; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-size: 0.85 rem; ">
         ${m.label}
-        ${m.image ? `<img src="${m.image}" style="width:100%; height:120px; object-fit:contain; margin-bottom:8px;" />` : ''}
       </div>
+      ${m.image ? `<img src="${m.image}" style="width:100%; height:120px; object-fit:contain; margin-bottom:8px;" />` : ''}
+      ${m.description ? `<div style="font-size:0.75rem; color: var(--text-main); margin-bottom:8px;"> ${m.description} </div>` : ''}
       <div class="popup-actions" style="display: flex; gap: 6px;">
         <button class="btn-secondary"
           onclick="window.confirmMarker(${m.id})"
@@ -263,6 +264,7 @@ onUnmounted(() => {
             <option value="danger">DANGER</option>
             <option value="base">BASE</option>
           </select>
+          <input v-model="newMarkerData.description" placeholder="DESCRIPTION" />
           <label class="file-label">
             <input type="file" accept="image/*" @change="onImageSelect" style="display:none"/>
             {{ selectedImage  ? selectedImage.name : 'ATTACH PHOTO'}}
