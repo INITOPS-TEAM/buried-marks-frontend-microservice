@@ -11,13 +11,14 @@ jobs:
 
     strategy:
       matrix:
-        include: - "context": "services/login_front"
-  "ecr_repo": "buried-marks-login-front"
-  "name": "login_front"
-- "context": "services/map_front"
-  "ecr_repo": "buried-marks-map-front"
-  "name": "map_front"
-
+        include:
+          - service: login_front
+            ecr_repo: buried-marks-login-front
+            context: services/login_front
+          - service: map_front
+            ecr_repo: buried-marks-map-front
+            context: services/map_front
+          
 
     steps:
       - name: Checkout code
