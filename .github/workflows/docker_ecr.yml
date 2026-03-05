@@ -9,6 +9,16 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        include: - "context": "services/login_front"
+  "ecr_repo": "buried-marks-login-front"
+  "name": "login_front"
+- "context": "services/map_front"
+  "ecr_repo": "buried-marks-map-front"
+  "name": "map_front"
+
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,7 +40,7 @@ jobs:
           ECR_REPOSITORY: ${{ github.event.repository.name }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker build -t $ECR_REGISTRY/${{matrix.ecr_repo}}:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY/${{matrix.ecr_repo}}:$IMAGE_TAG $ECR_REGISTRY/${{matrix.ecr_repo}}:latest
+          docker push $ECR_REGISTRY/${{matrix.ecr_repo}}:$IMAGE_TAG
+          docker push $ECR_REGISTRY/${{matrix.ecr_repo}}:latest
