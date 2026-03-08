@@ -5,7 +5,7 @@ ARG NODE_VERSION=23-alpine
 ARG NGINX_VERSION=alpine3.23
 
 # Use a lightweight Node.js image for building (customizable via ARG)
-FROM node:${NODE_VERSION} AS map-builder
+FROM node:${NODE_VERSION} AS voting-builder
 WORKDIR /app
 COPY package.json package-lock.json* ./
 
@@ -28,7 +28,7 @@ FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS runner
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the static build output from the build stage to Nginx's default HTML serving directory
-COPY --chown=nginx:nginx --from=map-builder /app/dist /usr/share/nginx/html
+COPY --chown=nginx:nginx --from=voting-builder /app/dist /usr/share/nginx/html
 
 # Use a built-in non-root user for security best practices
 USER nginx
