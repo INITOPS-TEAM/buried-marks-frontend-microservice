@@ -32,9 +32,9 @@ const permissions = computed(() => {
   const isInspector = user.inspector === true
   return {
     isInspector,
-    showAdmin: level === 3,
+    showAdmin: level >= 3,
     canAdd:    level >= 2,
-    canDelete: level === 3
+    canDelete: level >= 3
   }
 })
 
@@ -57,7 +57,7 @@ const goToAdmin = () => {
 }
 
 const goToVoting = () => {
-  window.location.href = import.meta.env.VITE_VOTING_SERVICE_URL
+  window.location.href = '/voting/';
 }
 
 const goTo = (lng, lat, zoom = 14) => {
@@ -219,7 +219,7 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="nav-right">
-          <button v-if="permissions.isInspector" class="btn-primary voting-glow" @click="goToVoting">VOTING</button>
+          <button class="btn-primary voting-glow" @click="goToVoting">VOTING</button>
           <button v-if="permissions.showAdmin" class="btn-primary" @click="goToAdmin">ADMIN</button>
           <button class="btn-secondary" @click="handleLogout">LOGOUT</button>
         </div>
