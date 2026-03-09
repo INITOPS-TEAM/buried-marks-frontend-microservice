@@ -10,8 +10,8 @@ const router = createRouter({
             component: () => import('../views/LoginView.vue')
         },
         {
-            path: '/regist',
-            name: 'Regist',
+            path: '/register',
+            name: 'Register',
             component: () => import('../views/RegistView.vue')
         }
     ]
@@ -20,12 +20,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const auth = useAuthStore()
 
-    if (['Login', 'Regist'].includes(to.name) && auth.isLoggedIn) {
+    if (['Login', 'Register'].includes(to.name) && auth.isLoggedIn) {
     window.location.href = `${import.meta.env.VITE_MAP_SERVICE_URL}/map/`
     return
     }
 
-    next() 
+    next()
 })
 
 export default router

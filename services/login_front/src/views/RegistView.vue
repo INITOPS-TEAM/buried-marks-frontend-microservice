@@ -10,7 +10,7 @@ const username = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const statusMessage = ref('')
-const token = ref(''); 
+const token = ref('');
 const isSuccess = ref(false)
 
 onMounted(() => {
@@ -25,7 +25,7 @@ const handleRegister = async () => {
 
     try {
         // Sending to the backend
-        const response = await api.post('/api/accept-invite/', {
+        const response = await api.post('/accept-invite/', {
             token: token.value,
             username: username.value,
             password: password.value
@@ -48,12 +48,12 @@ const handleRegister = async () => {
         <div class="box">
             <h2>Initial Authorization</h2>
             <p class="token-info" v-if="token">TOKEN STATUS: <span :class="{ 'active-text': token }">ACTIVE</span></p>
-    
+
             <div v-if="token && !isSuccess">
                 <input v-model="username" placeholder="CHOOSE USERNAME" autocomplete="off" />
                 <input v-model="password" type="password" placeholder="NEW PASSWORD" />
                 <input v-model="confirmPassword" type="password" placeholder="CONFIRM PASSWORD" />
-        
+
                 <button class="btn-primary" @click="handleRegister" :disabled="!username || !password || !confirmPassword">
                 Finalize Access
                 </button>

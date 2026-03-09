@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
-import api from '../api' 
+import api from '../api'
 
 const auth = useAuthStore()
 const activePolls = ref([])
@@ -32,7 +32,7 @@ const canLevelTop = computed(() => currentUser.value?.role === '2')
 
 // filter for the ban table
 const filteredUsers = computed(() => {
-  return users.value.filter(user => 
+  return users.value.filter(user =>
     user.username.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 })
@@ -41,36 +41,36 @@ const filteredUsers = computed(() => {
 const fetchData = async () => {
   try {
     const [pollsRes, usersRes] = await Promise.all([
-      api.get('/api/polls/'), 
-      api.get('/auth/users').catch(() => ({ data: [] }))
+      api.get('/api/polls/'),
+      api.get('/api/users/').catch(() => ({ data: [] }))
     ])
-    
+
     // check if the database does not send an array
     const allPolls = Array.isArray(pollsRes.data) ? pollsRes.data : (pollsRes.data?.polls || [])
-    
+
     // active voting results
     const activeRaw = allPolls.filter(p => p.status === 'active')
     activePolls.value = await Promise.all(activeRaw.map(async (p) => {
       try {
         const res = await api.get(`/api/polls/${p.id}/result`)
-      return { 
-        ...p, 
-        ...res.data, 
-      voted_users: p.voted_users || res.data.voted_users || [] 
-    } 
+      return {
+        ...p,
+        ...res.data,
+      voted_users: p.voted_users || res.data.voted_users || []
+    }
     } catch { return p }
 }))
-    
+
 // completed voting results
     const completed = allPolls.filter(p => p.status !== 'active')
     archivedPolls.value = await Promise.all(completed.map(async (p) => {
       try {
         const res = await api.get(`/api/polls/${p.id}/result`)
-        return { 
-          ...p, 
-          ...res.data, 
-          voted_users: p.voted_users || res.data.voted_users || [] 
-        } 
+        return {
+          ...p,
+          ...res.data,
+          voted_users: p.voted_users || res.data.voted_users || []
+        }
       } catch { return p }
     }))
 
@@ -91,19 +91,19 @@ const castVote = async (pollId, choice) => {
     notify(`PROTOCOL VOTE [${choice.toUpperCase()}] REGISTERED`)
     localVotes.value.push(pollId)
     // After the vote, we update the data so that the buttons disappear
-    await fetchData() 
+    await fetchData()
   } catch (err) {
     const status = err.response?.status
-    
+
     // 409 (Conflict) та 403 (Forbidden)
     if (status === 409) {
       notify('ALREADY VOTED', 'warning')
       localVotes.value.push(pollId)
       await fetchData()
-    } 
+    }
     else if (status === 403) {
     notify('ACCESS DENIED: INSUFFICIENT ROLE', 'danger')
-    } 
+    }
     else {
     notify('VOTE ERROR: ' + (err.response?.data?.detail || 'SERVER ERROR'), 'danger')
     console.error('Vote error detail:', err.response?.data)
@@ -116,7 +116,7 @@ const initiateBan = async (user) => {
   try {
     await api.post('/api/polls/', {
       type: 'ban',
-      target_id: user.user_id 
+      target_id: user.user_id
     })
     notify(`INITIATING BAN PROTOCOL: ${user.username.toUpperCase()}`, 'danger')
     await fetchData()
@@ -152,7 +152,7 @@ onMounted(fetchData)
 
 <template>
   <div class="voting-view admin-view" v-if="currentUser">
-    
+
     <div class="notification-container">
       <TransitionGroup name="toast">
         <div v-for="n in notifications" :key="n.id" class="toast" :class="n.type">
@@ -176,7 +176,7 @@ onMounted(fetchData)
           </div>
         </div>
       </div>
-      <button class="btn-secondary" @click="goToMap">RETURN TO MAP</button>   
+      <button class="btn-secondary" @click="goToMap">RETURN TO MAP</button>
     </header>
 
     <div class="layout-stack">
@@ -184,7 +184,7 @@ onMounted(fetchData)
         <div class="section-title">CHANGE OF LEVEL IN THE SYSTEM</div>
         <div class="promotion-controls">
           <p class="protocol-text">
-            You have the right to request an access level increase. This will initiate a voting process. 
+            You have the right to request an access level increase. This will initiate a voting process.
           </p>
           <button v-if="canLevelUp" class="btn-promo level_up" @click="initiateSelfPromotion('level_up')">
             INITIATE LEVEL UP PROTOCOL
@@ -214,7 +214,7 @@ onMounted(fetchData)
                 <td>{{ user.username }}</td>
                 <td class="stars">{{ '★'.repeat(user.role) }}</td>
                 <td>
-                  <button v-if="isInspector && user.user_id !== currentUser.user_id" 
+                  <button v-if="isInspector && user.user_id !== currentUser.user_id"
                           class="btn-mini-danger" @click="initiateBan(user)">
                     INITIATE BAN
                   </button>
@@ -226,7 +226,7 @@ onMounted(fetchData)
           </table>
         </div>
       </section>
-      
+
       <section class="content-block">
         <div class="section-title">ACTIVE POLLS</div>
         <div class="polls-list">
@@ -255,8 +255,8 @@ onMounted(fetchData)
       <section class="content-block archive-block">
         <div class="section-title">COMPLETED POLLS</div>
         <div class="polls-list">
-          <div v-for="poll in archivedPolls" :key="poll.id" 
-               class="poll-item archived" 
+          <div v-for="poll in archivedPolls" :key="poll.id"
+               class="poll-item archived"
                :class="{ 'success-border': poll.success, 'failed-border': !poll.success }">
             <div class="poll-info">
               <span class="type-tag" :class="poll.type">{{ poll.type?.toUpperCase() }}</span>
@@ -276,7 +276,8 @@ onMounted(fetchData)
 
 <style scoped>
 /* BASE  */
-.voting-view { height: 100vh; overflow-y: scroll; padding: 20px; color: #aaa; font-family: var(--font-mono); background: linear-gradient(rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.85)), url('../assets/bg.avif') no-repeat center/cover fixed; }
+/* .voting-view { height: 100vh; overflow-y: scroll; padding: 20px; color: #aaa; font-family: var(--font-mono); background: linear-gradient(rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.85)), url('../assets/bg.avif') no-repeat center/cover fixed; } */
+.voting-view { height: 100vh; overflow-y: scroll; padding: 20px; color: #aaa; font-family: var(--font-mono); background: linear-gradient(rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.85))}
 .layout-stack { display: flex; flex-direction: column; gap: 50px; max-width: 1400px; margin: 0 auto; padding-bottom: 60px; }
 .content-block { background: rgba(15, 15, 15, 0.9); border: 1px solid rgba(53, 91, 218, 0.2); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
 .section-title { padding: 15px 20px; font-size: 1.1rem; background: rgba(53, 91, 218, 0.1); color: var(--accent); border-bottom: 1px solid rgba(53, 91, 218, 0.3); letter-spacing: 2px; font-weight: bold; text-transform: uppercase; }
