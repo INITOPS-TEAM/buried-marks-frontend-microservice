@@ -53,7 +53,7 @@ const handleLogout = () => {
 }
 
 const goToAdmin = () => {
-  window.location.href = import.meta.env.VITE_ADMIN_SERVICE_URL
+  window.location.href = '/admin/';
 }
 
 const goToVoting = () => {
