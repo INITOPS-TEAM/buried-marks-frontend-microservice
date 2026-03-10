@@ -18,6 +18,12 @@ jobs:
           - service: map_front
             ecr_repo: buried-marks-map-front
             context: services/map_front
+          - service: voting_front
+            ecr_repo: buried-marks-voting-front
+            context: services/voting_front
+          - service: admin_front
+            ecr_repo: buried-marks-admin-front
+            context: services/admin_front
           
 
     steps:
