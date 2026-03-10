@@ -210,7 +210,7 @@ onUnmounted(() => {
     <header class="hud">
       <div class="hud-content">
         <div class="status-left">
-          <h1 class="main-title">MAP SECTOR: ACTIVE</h1>
+          <h1 class="main-title">SECTOR MAP: ACTIVE</h1>
           <div class="agent-info">
             <span>AGENT: {{ currentUser.username }}</span>
             <span class="sep">|</span>
