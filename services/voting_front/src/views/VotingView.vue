@@ -249,7 +249,7 @@ onMounted(fetchData)
                // PROTOCOL VOTED
               </div>
             </div>
-          </div> <div v-if="activePolls.length === 0" class="empty-msg">NO ACTIVE PROTOCOLS</div>
+          </div> <div v-if="activePolls.length === 0" class="empty-msg" style="margin: 24px;">NO ACTIVE PROTOCOLS</div>
         </div> </section>
 
       <section class="content-block archive-block">
