@@ -1,5 +1,5 @@
 :root {
-  --bg-dark: #000000;
+  --bg-dark: #151417;
   --bg-panel: rgba(10, 10, 10, 0.9);
   --bg-box: rgba(26, 26, 26, 0.95);
   --accent: #355bda;
@@ -18,7 +18,7 @@
 
 body {
   margin: 0;
-  background: var(--bg-dark) url('./assets/bg.avif') no-repeat center/cover fixed;
+  background: var(--bg-dark);
   font-family: var(--font-mono);
   color: var(--text-main);
   overflow: hidden;
@@ -30,7 +30,7 @@ body {
   cursor: pointer;
   transition: 0.2s all ease;
   border-radius: 2px;
-  
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -43,30 +43,30 @@ body {
   border: 1px solid transparent;
 }
 
-.btn-primary { 
-  background: var(--accent); 
-  color: #fff; 
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
 }
 
-.btn-primary:hover { 
-  background: var(--accent-hover); 
+.btn-primary:hover {
+  background: var(--accent-hover);
   box-shadow: 0 0 15px rgba(20, 70, 209, 0.4);
   border-color: var(--scout);
 }
 
-.btn-secondary { 
-  background: rgba(26, 26, 26, 0.9); 
-  border: 1px solid #444; 
-  color: var(--text-dim); 
+.btn-secondary {
+  background: rgba(26, 26, 26, 0.9);
+  border: 1px solid #444;
+  color: var(--text-dim);
 }
 
-.btn-secondary:hover { 
-  background: var(--accent-hover2); 
-  color: #fff; 
+.btn-secondary:hover {
+  background: var(--accent-hover2);
+  color: #fff;
   border-color: var(--text-main);
 }
 .nav-right {
   display: flex;
-  gap: 15px; 
+  gap: 15px;
   align-items: center;
 }

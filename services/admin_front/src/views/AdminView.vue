@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '../stores/auth'
-import api from '../api' // 
+import api from '../api' //
 
 const auth = useAuthStore()
 const currentUser = computed(() => auth.user)
@@ -23,9 +23,9 @@ const sendInvite = async () => {
   // Empty field - not performed
   if (!inviteEmail.value) return
   inviteError.value = ''
-  
+
   try {
-    // 
+    //
     await api.post('/invite/', { email: inviteEmail.value })
     alert(`INVITATION EXECUTED: ${inviteEmail.value}`)
     inviteEmail.value = ''
@@ -41,7 +41,7 @@ const sendInvite = async () => {
 // Email sending logic
 const emailData = ref({
   subject: '',
-  selectedRoles: [], 
+  selectedRoles: [],
   custom_text: ''
 })
 
@@ -74,7 +74,7 @@ const sendBroadcast = async () => {
     await api.post('/architect/send-email/', {
       subject: emailData.value.subject,
       custom_text: emailData.value.custom_text,
-      roles: emailData.value.selectedRoles 
+      roles: emailData.value.selectedRoles
     })
     alert("GLOBAL DISPATCH INITIATED")
     // Form cleaning
@@ -86,7 +86,7 @@ const sendBroadcast = async () => {
 // Deleting application data
 const wipeDatabase = () => {
   // Empty for now
-    
+
   }
 
 const renderStars = (num) => '★'.repeat(Number(num) || 0)
@@ -101,21 +101,21 @@ onMounted(() => {
 
 <template>
   <div class="admin-view" v-if="currentUser">
-    
+
     <header class="admin-header">
       <div class="header-info">
         <h1 class="glitch-text">ADMIN SECTOR</h1>
-        
+
         <div class="status-bar-wrapper">
           <div class="agent-status-panel">
             <span class="label">AGENT:</span>
             <span class="value">{{ currentUser.username }}</span>
-            
+
             <span class="separator">|</span>
-            
+
             <span class="label">ROLE:</span>
             <span class="stars">{{ renderStars(currentUser.role) }}</span>
-            
+
             <div v-if="currentUser.inspector" class="inspector-badge">
               INSPECTOR
             </div>
@@ -126,16 +126,16 @@ onMounted(() => {
     </header>
 
     <div class="admin-container">
-      
+
       <div class="layout-stack">
         <section class="content-block">
           <div class="section-title">AUTHORIZE ACCESS (INVITE)</div>
           <div class="card-body">
             <div class="input-group">
-              <input 
-                v-model="inviteEmail" 
-                type="email" 
-                placeholder="RECRUIT_EMAIL@DOMAIN.COM" 
+              <input
+                v-model="inviteEmail"
+                type="email"
+                placeholder="RECRUIT_EMAIL@DOMAIN.COM"
                 class="admin-input"
                 :class="{ 'input-error': inviteError }"
                 @keyup.enter="sendInvite"
@@ -156,16 +156,16 @@ onMounted(() => {
 
       <section class="content-block broadcast-block" :class="{ 'is-locked': isLocked }">
         <div class="section-title">
-          ARCHITECT'S NOTIFICATION TERMINAL 
+          ARCHITECT'S NOTIFICATION TERMINAL
           <span v-if="isLocked" class="lock-tag"> [LOCKED: REQUIRES ROLE 4]</span>
           <span v-else class="lock-tag active"> [ROLE 4 ACCESS GRANTED]</span>
         </div>
-        
+
         <div class="card-body">
           <div class="role-selector">
             <p class="selector-label">TARGET CLASSIFICATIONS:</p>
             <div class="roles-grid">
-              <button 
+              <button
                 v-for="role in roleOptions" :key="role.id"
                 class="role-btn"
                 :class="{ 'active': emailData.selectedRoles.includes(role.id) }"
@@ -178,22 +178,22 @@ onMounted(() => {
             </div>
           </div>
 
-          <input 
-            v-model="emailData.subject" 
-            type="text" 
-            placeholder="SUBJECT" 
-            class="admin-input mb-20" 
+          <input
+            v-model="emailData.subject"
+            type="text"
+            placeholder="SUBJECT"
+            class="admin-input mb-20"
             :disabled="isLocked"
           />
-          <textarea 
-            v-model="emailData.custom_text" 
-            placeholder="MESSAGE TEXT..." 
+          <textarea
+            v-model="emailData.custom_text"
+            placeholder="MESSAGE TEXT..."
             class="admin-textarea"
             :disabled="isLocked"
           ></textarea>
-          
-          <button 
-            class="btn-promo" 
+
+          <button
+            class="btn-promo"
             :class="{ 'btn-disabled': isLocked }"
             @click="sendBroadcast"
             :disabled="isLocked"
@@ -212,10 +212,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.admin-view { 
-  height: 100vh; overflow-y: scroll; padding: 20px; color: #aaa; 
-  font-family: var(--font-mono); 
-  background: linear-gradient(rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.85)), url('../assets/bg.avif') no-repeat center/cover fixed; 
+.admin-view {
+  height: 100vh; overflow-y: scroll; padding: 20px; color: #aaa;
+  font-family: var(--font-mono);
+  background: linear-gradient(rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.85));
 }
 
 /* Header Styles */

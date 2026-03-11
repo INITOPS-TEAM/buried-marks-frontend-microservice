@@ -1,5 +1,5 @@
 :root {
-  --bg-dark: #000000;
+  --bg-dark: #151417;
   --bg-panel: rgba(10, 10, 10, 0.9);
   --bg-box: rgba(26, 26, 26, 0.95);
   --accent: #355bda;
@@ -18,7 +18,7 @@
 
 body {
   margin: 0;
-  background: var(--bg-dark) url('./assets/bg.avif') no-repeat center/cover fixed;
+  background: var(--bg-dark);
   font-family: var(--font-mono);
   color: var(--text-main);
   overflow: hidden;

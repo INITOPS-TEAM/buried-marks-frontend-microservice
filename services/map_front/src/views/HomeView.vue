@@ -146,7 +146,7 @@ const addMarkerToMap = (m) => {
 
   const popupHTML = `
     <div class="popup-content">
-      <div class="popup-title" style="color: ${m.category === 'danger' ? 'var(--danger)' : m.category === 'scout' ? 'var(--scout)' : 'var(--base)'}; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-size: 0.85 rem; ">
+      <div class="popup-title" style="color: ${m.category === 'danger' ? 'var(--danger)' : m.category === 'scout' ? 'var(--scout)' : 'var(--base)'}; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; margin-top: 4px; font-size: 0.85 rem; ">
         ${m.label}
       </div>
       ${m.image ? `<img src="${m.image}" style="width:100%; height:120px; object-fit:contain; margin-bottom:8px;" />` : ''}
@@ -159,7 +159,7 @@ const addMarkerToMap = (m) => {
           ${m.author_id === currentUser.value?.user_id ? 'disabled' : ''}>
         ✓ <span id="confirm-count-${m.id}">${m.confirm_count}</span>
         </button>
-        ${permissions.value.canDelete ? `<button onclick="window.deleteMarkerById(${m.id})">×</button>` : ''}
+        ${permissions.value.canDelete ? `<button style="padding: 4px 10px;" onclick="window.deleteMarkerById(${m.id})">×</button>` : ''}
         </div>
       </div>
   `
