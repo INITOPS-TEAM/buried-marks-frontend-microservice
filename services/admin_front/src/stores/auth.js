@@ -62,7 +62,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         this.token = newAccess;
         this.user = jwtDecode(newAccess);
-        document.cookie = `access_token=${newAccess}; path=/; max-age=60; SameSite=Lax`;
+        document.cookie = `access_token=${newAccess}; path=/; max-age=300; SameSite=Lax`;
       } catch (error) {
         console.error("Failed to decode new access token:", error);
         this.clearAuth();
