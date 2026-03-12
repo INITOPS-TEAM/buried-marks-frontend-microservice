@@ -249,7 +249,7 @@ onMounted(fetchData)
                // PROTOCOL VOTED
               </div>
             </div>
-          </div> <div v-if="activePolls.length === 0" class="empty-msg">NO ACTIVE PROTOCOLS</div>
+          </div> <div v-if="activePolls.length === 0" class="empty-msg" style="margin: 24px;">NO ACTIVE PROTOCOLS</div>
         </div> </section>
 
       <section class="content-block archive-block">
@@ -276,7 +276,6 @@ onMounted(fetchData)
 
 <style scoped>
 /* BASE  */
-/* .voting-view { height: 100vh; overflow-y: scroll; padding: 20px; color: #aaa; font-family: var(--font-mono); background: linear-gradient(rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.85)), url('../assets/bg.avif') no-repeat center/cover fixed; } */
 .voting-view { height: 100vh; overflow-y: scroll; padding: 20px; color: #aaa; font-family: var(--font-mono); background: linear-gradient(rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.85))}
 .layout-stack { display: flex; flex-direction: column; gap: 50px; max-width: 1400px; margin: 0 auto; padding-bottom: 60px; }
 .content-block { background: rgba(15, 15, 15, 0.9); border: 1px solid rgba(53, 91, 218, 0.2); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
