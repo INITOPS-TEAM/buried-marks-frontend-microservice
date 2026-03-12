@@ -48,7 +48,7 @@ export const useAuthStore = defineStore('auth', {
       this.refreshToken = null;
       this.user = null;
       this.isLoggedIn = false;
-      
+
       document.cookie = "access_token=; path=/; expires=Thu, 01 Jan 2000 00:00:00 UTC;";
       document.cookie = "refresh_token=; path=/; expires=Thu, 01 Jan 2000 00:00:00 UTC;";
 
@@ -56,7 +56,19 @@ export const useAuthStore = defineStore('auth', {
       if (loginUrl && window.location.port !== '5100') {
         window.location.href = loginUrl;
       }
+    },
+
+    updateAccessToken(newAccess) {
+      try {
+        this.token = newAccess;
+        this.user = jwtDecode(newAccess);
+        document.cookie = `access_token=${newAccess}; path=/; max-age=60; SameSite=Lax`;
+      } catch (error) {
+        console.error("Failed to decode new access token:", error);
+        this.clearAuth();
+      }
     }
   },
   persist: false
 })
+
