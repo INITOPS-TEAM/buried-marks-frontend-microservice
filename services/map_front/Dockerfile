@@ -30,6 +30,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copy the static build output from the build stage to Nginx's default HTML serving directory
 COPY --chown=nginx:nginx --from=map-builder /app/dist /usr/share/nginx/html
 
+COPY entrypoint.sh /docker-entrypoint.d/entrypoint.sh
+
 # Use a built-in non-root user for security best practices
 USER nginx
 
