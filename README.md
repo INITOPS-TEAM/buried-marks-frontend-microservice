@@ -27,24 +27,25 @@ All frontend services are located in the `services/` directory:
 ## Setup Instructions
 
 1. **Environment Variables**:
-   In each service folder, copy the `.env.example` file to a new file named `.env`:
 
-   ```bash
-   cp services/login_front/.env.example services/login_front/.env
-   ```
+    The environment variables of Vite are [injected at runtime](https://vite.dev/guide/env-and-mode).
 
-2.**Installation**:
+    `map_front` microservice uses `VITE_MAPBOX_TOKEN` - sensitive key. As this value should be injected into image after build,  [`services/map_front/entrypoint.sh`](map_front/entrypoint.sh) is used to parse pre-configured prefixed variables and set secret values into them from [`.env.map.front`](https://github.com/INITOPS-TEAM/buried-marks-infrastructure/blob/main/.env.map.front.example) file in infrastructure repo.
 
-```bash
-cd services/login_front
-npm сі
-```
+    In each service folder, there is the `.env.production` file with configured `VITE_*_URL` values.
 
-3.**Development**:
+1. **Installation**:
 
-```bash
-npm run dev
-```
+    ```bash
+    cd services/<name>_front
+    npm сі
+    ```
+
+2. **Development**:
+
+    ```bash
+    npm run dev
+    ```
 
 ## Other
 
