@@ -42,15 +42,7 @@ const handleSecret = async () => {
     if (response.status === 200 && response.data?.access) {
       auth.setToken(response.data.access, response.data.refresh) 
       auth.setVerified(true)
-      
-      
-      const mapUrl = import.meta.env.VITE_MAP_SERVICE_URL
-      
-      if (mapUrl) {
-        window.location.href = mapUrl
-      } else {
-        router.push('/')
-      }
+      window.location.href = '/map/'
     } 
   } catch (err) {
     statusMessage.value = 'Error: Invalid secret code'

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useAuthStore } from './stores/auth'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL
+  baseURL: ''
 })
 api.interceptors.request.use(config => {
   const auth = useAuthStore()
@@ -33,7 +33,7 @@ api.interceptors.response.use(
           return Promise.reject(error)
         }
 
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/token/refresh/`, {
+        const response = await axios.post('/api/token/refresh/', {
           refresh: refreshToken
         })
 

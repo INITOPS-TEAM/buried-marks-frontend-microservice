@@ -9,10 +9,7 @@ const route = useRoute()
 
 onMounted(() => {
   if (auth.token && auth.isLoggedIn) {
-    const mapUrl = import.meta.env.VITE_MAP_SERVICE_URL
-    if (mapUrl) {
-      window.location.href = `${mapUrl}/map/`
-    }
+    window.location.href = '/map/'
   }
 })
 

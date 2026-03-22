@@ -16,7 +16,7 @@ router.beforeEach((to, from, next) => {
     const auth = useAuthStore()
 
     if (!auth.isLoggedIn) {
-        window.location.href = import.meta.env.VITE_LOGIN_SERVICE_URL
+        window.location.href = '/'
         return
     }
 
