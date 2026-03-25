@@ -52,9 +52,8 @@ export const useAuthStore = defineStore('auth', {
       document.cookie = "access_token=; path=/; expires=Thu, 01 Jan 2000 00:00:00 UTC;";
       document.cookie = "refresh_token=; path=/; expires=Thu, 01 Jan 2000 00:00:00 UTC;";
 
-      const loginUrl = import.meta.env.VITE_LOGIN_SERVICE_URL;
-      if (loginUrl && window.location.port !== '5100') {
-        window.location.href = loginUrl;
+      if (window.location.port !== '5100') {
+        window.location.href = '/';
       }
     },
 

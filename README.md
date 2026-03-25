@@ -32,8 +32,6 @@ All frontend services are located in the `services/` directory:
 
     `map_front` microservice uses `VITE_MAPBOX_TOKEN` - sensitive key. As this value should be injected into image after build,  [`services/map_front/entrypoint.sh`](map_front/entrypoint.sh) is used to parse pre-configured prefixed variables and set secret values into them from [`.env.map.front`](https://github.com/INITOPS-TEAM/buried-marks-infrastructure/blob/main/.env.map.front.example) file in infrastructure repo.
 
-    In each service folder, there is the `.env.production` file with configured `VITE_*_URL` values.
-
 1. **Installation**:
 
     ```bash
@@ -41,7 +39,7 @@ All frontend services are located in the `services/` directory:
     npm сі
     ```
 
-2. **Development**:
+1. **Development**:
 
     ```bash
     npm run dev

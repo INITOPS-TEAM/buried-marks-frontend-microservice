@@ -21,8 +21,8 @@ router.beforeEach((to, from, next) => {
     const auth = useAuthStore()
 
     if (['Login', 'Register'].includes(to.name) && auth.isLoggedIn) {
-    window.location.href = `${import.meta.env.VITE_MAP_SERVICE_URL}/map/`
-    return
+        window.location.href = '/map/'
+        return
     }
 
     next()
