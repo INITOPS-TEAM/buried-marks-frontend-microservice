@@ -1,3 +1,6 @@
+# Managed by Terraform in https://github.com/INITOPS-TEAM/buried-marks-terraform.
+# All changes would be discarded after `terraform apply` in buried-marks-terraform repository.
+
 name: Build and Push to ECR
 
 on:
