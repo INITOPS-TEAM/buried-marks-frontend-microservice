@@ -38,6 +38,31 @@ const sendInvite = async () => {
   }
 }
 
+
+const aiPrompt = ref('Check the last 10 marks added to the map')
+const aiReport = ref('')
+const isAiLoading = ref(false)
+
+const requestAiModeration = async () => {
+    if (!aiPrompt.value || isAiLoading.value || isLocked.value) return
+
+  isAiLoading.value = true
+  aiReport.value = ''
+
+  try {
+    const response = await api.post('/architect/mcp-moderation/', {
+      prompt: aiPrompt.value
+    })
+
+    aiReport.value = response.data.report || 'The agent has completed the scan: no suspicious tags were found'
+  } catch (err) {
+    console.error(err)
+    aiReport.value = 'CRITICAL ERROR:  The connection to the MCP server has been lost, or DB is unavailable.'
+  } finally {
+    isAiLoading.value = false
+  }
+}
+
 // Email sending logic
 const emailData = ref({
   subject: '',
@@ -153,6 +178,45 @@ onMounted(() => {
           </div>
         </section>
       </div>
+
+      <section class="content-block mb-20" :class="{ 'is-locked': isLocked }">
+        <div class="section-title">
+          AI MCP AGENT CONTENT MODERATION
+          <span v-if="isLocked" class="lock-tag"> [LOCKED: REQUIRES ROLE 4]</span>
+          <span v-else class="lock-tag active"> [ROLE 4 ACCESS GRANTED]</span>
+        </div>
+        <div class="card-body">
+          <div class="input-group mb-20">
+            <input
+              v-model="aiPrompt"
+              type="text"
+              placeholder="Command for AI, e.g. check last 10 marks"
+              class="admin-input"
+              @keyup.enter="requestAiModeration"
+              :disabled="isAiLoading || isLocked"
+            />
+            <button
+              class="btn-execute"
+              @click="requestAiModeration"
+              :disabled="isAiLoading || isLocked"
+            >
+              {{ isAiLoading ? 'ANALYZING...' : 'EXECUTE AGENT' }}
+            </button>
+          </div>
+
+          <textarea
+          v-if="aiReport || isAiLoading"
+          :value="isAiLoading ? 'Establishing secure connection to MCP server...' : aiReport"
+          class="admin-textarea"
+          readonly
+          style="color: #00ff00; border-color: #333; min-height: 300px;"
+        ></textarea>
+        </div>
+
+        <div v-if="isLocked" class="lock-overlay">
+          <span class="lock-icon">🔒</span>
+        </div>
+      </section>
 
       <section class="content-block broadcast-block" :class="{ 'is-locked': isLocked }">
         <div class="section-title">
