@@ -100,3 +100,23 @@ jobs:
           docker push $ECR_REGISTRY/${{matrix.ecr_repo}}:$IMAGE_TAG
           docker push $ECR_REGISTRY/${{matrix.ecr_repo}}:latest
       
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::395947696424:role/github-service
+          aws-region: eu-north-1
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2.1.0
+
+      - name: Build and push
+        env:
+          ECR_REGISTRY: "395947696424.dkr.ecr.eu-north-1.amazonaws.com"
+          ECR_REPOSITORY: ${{ github.event.repository.name }}
+          IMAGE_TAG: ${{ github.event_name == 'release' && github.ref_name || github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/${{matrix.ecr_repo}}:$IMAGE_TAG ./services/${{matrix.service}}
+          docker tag $ECR_REGISTRY/${{matrix.ecr_repo}}:$IMAGE_TAG $ECR_REGISTRY/${{matrix.ecr_repo}}:latest
+          docker push $ECR_REGISTRY/${{matrix.ecr_repo}}:$IMAGE_TAG
+          docker push $ECR_REGISTRY/${{matrix.ecr_repo}}:latest
+      
